@@ -1,4 +1,6 @@
 #!/usr/bin/node
-['C is fun', 'Python is cool', 'JavaScript is amazing'].forEach(
-  elem => console.log(elem)
-);
+// Print different string types on console
+
+console.log('C is fun');
+console.log('Python is cool');
+console.log('JavaScript is amazing');
