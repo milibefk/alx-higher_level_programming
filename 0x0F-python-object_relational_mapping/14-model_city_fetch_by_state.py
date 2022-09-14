@@ -1,22 +1,28 @@
 #!/usr/bin/python3
-"""Print all City objs from db 'hbtn_0e_14_usa'
-Sort in ascending order by cities.id
-Display results as "<state name>: (<city id>) <city name>"
-Script should take 3 args: username, pw, and db name
-Must use SQLAlchemy
+"""
+This script defines a State class and
+a Base class to work with MySQLAlchemy ORM.
 """
 
-import sys
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
-from model_state import Base, State
-from model_city import City
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
-if __name__ == "__main__":
-    engine = create_engine("mysql+mysqldb://{}:{}@localhost:3306/{}"
-                           .format(sys.argv[1], sys.argv[2], sys.argv[3]))
-    Session = sessionmaker(bind=engine)
-    session = Session()
+Base = declarative_base()
 
-    for i in session.query(State, City).filter(State.id == City.state_id):
-        print("{}: ({:d}) {}".format(i.State.name, i.City.id, i.City.name))
+
+class State(Base):
+    """State class
+
+    Attributes:
+        __tablename__ (str): The table name of the class
+        id (int): The State id of the class
+        name (str): The State name of the class
+        cities (:obj:`City`): The Cities belongs to State
+
+    """
+    __tablename__ = 'states'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(128), nullable=False)
+    cities = relationship("City", backref="state", cascade="all, delete")
