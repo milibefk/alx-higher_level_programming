@@ -1,28 +1,24 @@
 #!/usr/bin/python3
 """
-This script defines a State class and
-a Base class to work with MySQLAlchemy ORM.
+Lists all City objects from the database hbtn_0e_101_usa
 """
+import sys
+from relationship_state import Base, State
+from relationship_city import City
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+if __name__ == '__main__':
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'.
+                           format(sys.argv[1], sys.argv[2], sys.argv[3]),
+                           pool_pre_ping=True)
 
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
-class State(Base):
-    """State class
+    st = session.query(State).join(City).order_by(City.id).all()
 
-    Attributes:
-        __tablename__ (str): The table name of the class
-        id (int): The State id of the class
-        name (str): The State name of the class
-        cities (:obj:`City`): The Cities belongs to State
-
-    """
-    __tablename__ = 'states'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", backref="state", cascade="all, delete")
+    for state in st:
+        for city in state.cities:
+            print("{}: {} -> {}".format(city.id, city.name, state.name))
