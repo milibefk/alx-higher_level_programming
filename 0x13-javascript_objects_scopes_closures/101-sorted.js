@@ -1,15 +1,26 @@
 #!/usr/bin/node
-// Compute a dictionary of user IDs by occurrence
-const occurrencesByUser = require('./101-data').dict;
-const usersByOccurrence = {};
-let user;
-let occurrence;
-for (user in occurrencesByUser) {
-  occurrence = occurrencesByUser[user];
-  if (usersByOccurrence[occurrence] === undefined) {
-    usersByOccurrence[occurrence] = [user];
-  } else {
-    usersByOccurrence[occurrence].push(user);
+
+// Dictionary of user id by occurrences
+const dict = require('./101-data').dict;
+
+// Dictionary of occurrences by user id
+const newDict = {};
+
+// Go through each occurrence in the dictionary.
+Object.values(dict).forEach((occurrence) => {
+  // Add a new entry if the occurrence's user ids is not filled in already
+  if (Object.keys(newDict).indexOf(occurrence) === -1) {
+    newDict[occurrence] = [];
+
+    // Get all user ids that have matching occurrences
+    const userIdsMatchingWithOccurrence = Object.entries(dict).filter(([key, value]) => {
+      return occurrence === value;
+    });
+
+    // Add the matching ids to the newDict
+    userIdsMatchingWithOccurrence.forEach(item => {
+      newDict[occurrence].push(item[0]);
+    });
   }
-}
-console.log(usersByOccurrence);
+});
+console.log(newDict);
