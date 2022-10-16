@@ -1,6 +1,7 @@
 #!/usr/bin/node
-// Import an array and compute a new array
-const oldlist = require('./100-data').list;
-const newlist = oldlist.map((v, i) => v * i);
-console.log(oldlist);
-console.log(newlist);
+
+const list = require('./100-data').list;
+
+console.log(list);
+// Multiply each value in the list by its index
+console.log(list.map((item, i) => { return item * i; }));
