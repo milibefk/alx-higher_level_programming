@@ -1,34 +1,21 @@
 #!/usr/bin/node
-// Concatenate two files
+
 const fs = require('fs');
-try {
-  fs.open(process.argv[4], 'w', (err, fd) => {
-    if (err) {
-      throw err;
-    }
-    fs.readFile(process.argv[2], (err, data) => {
-      if (err) {
-        throw err;
-      }
-      fs.write(fd, data, (err, bytesWritten, buffer) => {
-        if (err) {
-          throw err;
-        }
-        return bytesWritten;
-      });
-    });
-    fs.readFile(process.argv[3], (err, data) => {
-      if (err) {
-        throw err;
-      }
-      fs.write(fd, data, (err, bytesWritten, buffer) => {
-        if (err) {
-          throw err;
-        }
-        return bytesWritten;
-      });
-    });
+const argv = require('process').argv;
+
+// Write to the file in the 3rd argument, the contents of the files specified
+// by first and second argument
+
+fs.readFile(argv[2], 'utf8', function (err, data) {
+  if (err) throw err;
+  fs.writeFile(argv[4], data, function (err) {
+    if (err) throw err;
   });
-} catch (err) {
-  console.log(err);
-}
+});
+
+fs.readFile(argv[3], 'utf8', function (err, data) {
+  if (err) throw err;
+  fs.appendFile(argv[4], data, function (err) {
+    if (err) throw err;
+  });
+});
